@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+H:\KeilC51\STC89C52\IOTest\IOOutput.uvproj
+Project File Date:  06/07/2016
+
+<h2>Output:</h2>
+Rebuild target 'Output'
+assembling STARTUP.A51...
+compiling main.c...
+main.c(117): warning C206: 'INIT0Init': missing function-prototype
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  INIT0INIT
+    MODULE:  .\debug\obj\main.obj (MAIN)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  INIT0INIT
+    MODULE:  .\debug\obj\main.obj (MAIN)
+    ADDRESS: 013BH
+Program Size: data=13.0 xdata=0 code=343
+creating hex file from ".\debug\obj\IOOutput"...
+".\debug\obj\IOOutput" - 0 Error(s), 3 Warning(s).
+Rebuild target 'Output'
+assembling STARTUP.A51...
+compiling main.c...
+main.c(117): warning C206: 'INIT0Init': missing function-prototype
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  INIT0INIT
+    MODULE:  .\debug\obj\main.obj (MAIN)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  INIT0INIT
+    MODULE:  .\debug\obj\main.obj (MAIN)
+    ADDRESS: 013BH
+Program Size: data=13.0 xdata=0 code=343
+creating hex file from ".\debug\obj\IOOutput"...
+".\debug\obj\IOOutput" - 0 Error(s), 3 Warning(s).
+Rebuild target 'Output'
+assembling STARTUP.A51...
+compiling main.c...
+linking...
+Program Size: data=13.0 xdata=0 code=343
+creating hex file from ".\debug\obj\IOOutput"...
+".\debug\obj\IOOutput" - 0 Error(s), 0 Warning(s).
