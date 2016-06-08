@@ -56,32 +56,33 @@ void timer1_int(void) interrupt 3
 }
 */
 
-sbit HightOut = P2^0;
-sbit TriggerIn = P2^1;
+sbit HightOut = P2^7;
+//sbit TriggerIn = P2^7;
 
 static unsigned int g_Timer0Counter = 0;
 static unsigned int g_Timer1Counter = 0;
 #define TIMER0_TIMEOUT		(3000) //300mS  延时300ms  输出3S高电平
 #define TIMER1_TIMEOUT		(30000) //3S
+#define TIMERVALUE			(0x7B)  //定时器工作方式2  8位自动装载  16MHz  0x7B   12MHz 0x9C  11.0592MHz 0xA4
 
-static void INIT0Start(void)
+static void INIT1Start(void)
 {
-	EX0 = 1;//开外部中断0
-    IT0 = 0;//中断触发方式
+	EX1 = 1;//开外部中断0
+    IT1 = 0;//中断触发方式
 }
 
-static void INIT0Stop(void)
+static void INIT1Stop(void)
 {
-	 EX0 = 0;//关外中断0
+	 EX1 = 0;//关外中断0
 }
 
 static void TimerInit(void)
 {
 	TMOD = 0X22;//设置定时器工作方式T0,T1均为工作方式2（8位自动重装）  
-    TH0 = 0x7B;//16MHz 晶振  定时 100us
-    TL0 = 0x7B;
-    TH1 = 0x7B;
-    TL1 = 0x7B;
+    TH0 = TIMERVALUE;//定时 100us
+    TL0 = TIMERVALUE;
+    TH1 = TIMERVALUE;
+    TL1 = TIMERVALUE;
 	g_Timer0Counter = 0;
 	g_Timer1Counter = 0;
 }
@@ -114,24 +115,24 @@ static void Timer1Stop(void)
 
 void main(void)
 {
-	INIT0Start();
+	INIT1Start();
 	TimerInit();
 	EA = 1; //开总中断
 	while(1);
 }
 
-//外部中断0
-static void INIT0IRQHandler() interrupt 0
+//外部中断1
+static void INIT1IRQHandler() interrupt 2
 {
 	if(HightOut) //如果正在输出高电平，则中断
 	{
 		Timer0Stop();
 		Timer1Stop();
-		INIT0Start();
+		INIT1Start();
 		HightOut = 0;
 	}else
 	{
-		INIT0Stop();
+		INIT1Stop();
 		Timer0Start();
 		HightOut = 0;
 	}
@@ -160,6 +161,6 @@ static void __Timer1IRQHandler(void) interrupt 3
 		g_Timer1Counter = 0;
 		Timer1Stop();
 		HightOut = 0;
-		INIT0Start();
+		INIT1Start();
 	}
 }
