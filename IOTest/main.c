@@ -116,6 +116,7 @@ static void Timer1Stop(void)
 void main(void)
 {
 	INIT1Start();
+	HightOut = 1;
 	TimerInit();
 	EA = 1; //¿ª×ÜÖÐ¶Ï
 	while(1);
@@ -129,12 +130,12 @@ static void INIT1IRQHandler() interrupt 2
 		Timer0Stop();
 		Timer1Stop();
 		INIT1Start();
-		HightOut = 0;
+		HightOut = 1;
 	}else
 	{
 		INIT1Stop();
 		Timer0Start();
-		HightOut = 0;
+		HightOut = 1;
 	}
 	
 }
@@ -148,7 +149,7 @@ static void __Timer0IRQHandler(void) interrupt 1
 		g_Timer0Counter = 0;
 		Timer0Stop();
 		Timer1Start();
-		HightOut = 1;
+		HightOut = 0;
 	}
 }
 
@@ -160,7 +161,7 @@ static void __Timer1IRQHandler(void) interrupt 3
 	{
 		g_Timer1Counter = 0;
 		Timer1Stop();
-		HightOut = 0;
+		HightOut = 1;
 		INIT1Start();
 	}
 }
