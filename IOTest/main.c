@@ -1,5 +1,7 @@
 #include "stdio.h"
+#include "base_type.h"
 #include <reg52.h>
+#include "uart.h"
 /*
 unsigned long t1 = 0;
 unsigned long t2 = 0;
@@ -60,15 +62,30 @@ sbit HightOut = P2^7;
 //sbit TriggerIn = P2^7;
 
 static unsigned int g_Timer0Counter = 0;
-static unsigned int g_Timer1Counter = 0;
-#define TIMER0_TIMEOUT		(3000) //300mS  延时300ms  输出3S高电平
-#define TIMER1_TIMEOUT		(30000) //3S
-#define TIMERVALUE			(0x7B)  //定时器工作方式2  8位自动装载  16MHz  0x7B   12MHz 0x9C  11.0592MHz 0xA4
+static unsigned long g_Timer1Counter = 0;
+#define TIMER0_TIMEOUT		(20000) //2S  延时300ms  输出2S高电平
+#define TIMER1_TIMEOUT		(150000) //15S
+#define TIMERVALUE			(0xA4)  //定时器工作方式2  8位自动装载  16MHz  0x7B   12MHz 0x9C  11.0592MHz 0xA4
+
+void _Delay(unsigned int ms)
+{
+	unsigned int i = 0;
+	unsigned int j = 0;
+	for(i = ms; i> 0; i--)
+	{
+		for(j = 110; j > 0; j--)
+		{
+			;//_nop_();
+		}
+	}
+}
 
 static void INIT1Start(void)
 {
 	EX1 = 1;//开外部中断0
     IT1 = 0;//中断触发方式
+	
+	
 }
 
 static void INIT1Stop(void)
@@ -78,7 +95,7 @@ static void INIT1Stop(void)
 
 static void TimerInit(void)
 {
-	TMOD = 0X22;//设置定时器工作方式T0,T1均为工作方式2（8位自动重装）  
+	TMOD = 0x22;//设置定时器工作方式T0,T1均为工作方式2（8位自动重装）  
     TH0 = TIMERVALUE;//定时 100us
     TL0 = TIMERVALUE;
     TH1 = TIMERVALUE;
@@ -116,26 +133,34 @@ static void Timer1Stop(void)
 void main(void)
 {
 	INIT1Start();
-	HightOut = 1;
+	//_UartOpen();
+	
+	//HightOut = 0;
+	//_Delay(1000);
+	//HightOut = 1;
+	//_Delay(1000);
+	//HightOut = 1;
 	TimerInit();
 	EA = 1; //开总中断
+	//hs_printf(" Main Open !\n\r");
 	while(1);
 }
 
 //外部中断1
 static void INIT1IRQHandler() interrupt 2
 {
-	if(HightOut) //如果正在输出高电平，则中断
+	//if(HightOut) //如果正在输出高电平，则中断
+	//{
+		//Timer0Stop();
+		//Timer1Stop();
+		//INIT1Start();
+		//HightOut = 1;
+	//}else
 	{
-		Timer0Stop();
-		Timer1Stop();
-		INIT1Start();
-		HightOut = 1;
-	}else
-	{
+		_Delay(100);
 		INIT1Stop();
-		Timer0Start();
-		HightOut = 1;
+		Timer0Start();//开启Time0定时输出电平
+		HightOut = 0; // 输出高电平
 	}
 	
 }
@@ -143,13 +168,14 @@ static void INIT1IRQHandler() interrupt 2
 //定时器T0 中断响应
 static void __Timer0IRQHandler(void) interrupt 1
 {
+	//hs_printf(" Timer0 IRQ  \n\r");
 	g_Timer0Counter++;
 	if(g_Timer0Counter >= TIMER0_TIMEOUT)
 	{
 		g_Timer0Counter = 0;
 		Timer0Stop();
 		Timer1Start();
-		HightOut = 0;
+		HightOut = 1;
 	}
 }
 
