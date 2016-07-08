@@ -64,7 +64,7 @@ sbit HightOut = P2^7;
 static unsigned int g_Timer0Counter = 0;
 static unsigned long g_Timer1Counter = 0;
 #define TIMER0_TIMEOUT		(20000) //2S  延时300ms  输出2S高电平
-#define TIMER1_TIMEOUT		(150000) //15S
+#define TIMER1_TIMEOUT		(120000) //15S
 #define TIMERVALUE			(0xA4)  //定时器工作方式2  8位自动装载  16MHz  0x7B   12MHz 0x9C  11.0592MHz 0xA4
 
 void _Delay(unsigned int ms)
@@ -135,11 +135,12 @@ void main(void)
 	INIT1Start();
 	//_UartOpen();
 	
-	//HightOut = 0;
-	//_Delay(1000);
-	//HightOut = 1;
-	//_Delay(1000);
-	//HightOut = 1;
+	/* HightOut = 0;
+	_Delay(1000);
+	HightOut = 1;
+	_Delay(1000); */
+	HightOut = 0; 
+	
 	TimerInit();
 	EA = 1; //开总中断
 	//hs_printf(" Main Open !\n\r");
@@ -160,7 +161,7 @@ static void INIT1IRQHandler() interrupt 2
 		_Delay(100);
 		INIT1Stop();
 		Timer0Start();//开启Time0定时输出电平
-		HightOut = 0; // 输出高电平
+		HightOut = 1; // 输出高电平
 	}
 	
 }
@@ -175,7 +176,7 @@ static void __Timer0IRQHandler(void) interrupt 1
 		g_Timer0Counter = 0;
 		Timer0Stop();
 		Timer1Start();
-		HightOut = 1;
+		HightOut = 0;
 	}
 }
 
@@ -187,7 +188,7 @@ static void __Timer1IRQHandler(void) interrupt 3
 	{
 		g_Timer1Counter = 0;
 		Timer1Stop();
-		HightOut = 1;
+		HightOut = 0;
 		INIT1Start();
 	}
 }
