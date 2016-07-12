@@ -132,6 +132,7 @@ static void Timer1Stop(void)
 
 void main(void)
 {
+	HightOut = 0; 
 	INIT1Start();
 	//_UartOpen();
 	
@@ -139,8 +140,6 @@ void main(void)
 	_Delay(1000);
 	HightOut = 1;
 	_Delay(1000); */
-	HightOut = 0; 
-	
 	TimerInit();
 	EA = 1; //¿ª×ÜÖÐ¶Ï
 	//hs_printf(" Main Open !\n\r");
